@@ -4,7 +4,8 @@ import importlib
 module_names = [
     "uv_rename",
     "uv_copy",
-    "uv_merge"
+    "uv_merge",
+    "fbx_export"
 ]
 
 modules = []
@@ -18,9 +19,16 @@ for module_name in module_names:
 def register():
     for module in modules:
         if hasattr(module, 'register'):
-            module.register()
+            try:
+                module.register()
+            except Exception as e:
+                print(f"注册模块出错 {module.__name__}: {str(e)}")
 
 def unregister():
-    for module in modules:
+    # 反向遍历模块列表进行注销
+    for module in reversed(modules):
         if hasattr(module, 'unregister'):
-            module.unregister() 
+            try:
+                module.unregister()
+            except Exception as e:
+                print(f"注销模块出错 {module.__name__}: {str(e)}") 
